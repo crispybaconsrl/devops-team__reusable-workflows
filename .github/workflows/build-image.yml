@@ -25,12 +25,12 @@ jobs:
     - name: Wait for IAM credentials to be ready
       run: sleep 10
     - name: Create ECR registry
-      run: aws ecr create-repository --repository-name ${{ env.PROJECT_NAME }} --region eu-west-1 || true
+      run: aws ecr create-repository --repository-name ${{ inputs.PROJECT_NAME }} --region eu-west-1 || true
     - uses: actions/checkout@v3
     - name: Login ECR registry
-      run: aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ env.BASE_REGISTRY_PATH }}/${{ env.PROJECT_NAME }}
+      run: aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ env.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}
     - name: Build the Docker image
-      run: docker build -t ${{ env.BASE_REGISTRY_PATH }}/${{ env.PROJECT_NAME }}:${{ github.sha }} .
+      run: docker build -t ${{ env.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }} .
     - name: Push docker image
-      run: docker push ${{ env.BASE_REGISTRY_PATH }}/${{ env.PROJECT_NAME }}:${{ github.sha }}
+      run: docker push ${{ env.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}
 

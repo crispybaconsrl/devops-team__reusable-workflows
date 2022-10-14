@@ -22,9 +22,9 @@ jobs:
       steps:
       - name: Deploy on Rancher
         run: |
-          export IMAGE_TAG=${{ env.BASE_REGISTRY_PATH }}/${{ env.PROJECT_NAME }}:${{ github.sha }}
+          export IMAGE_TAG=${{ env.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}
           echo "Deploying to Rancher..."
           curl -u "${{ secrets.RANCHER_TOKEN }}" \
           -X PATCH -H 'Content-Type: application/json-patch+json' \
-          ${{ secrets.RANCHER_URL }}/k8s/clusters/c-pt57p/apis/apps/v1/namespaces/$NAMESPACE/deployments/$DEPLOYMENT_NAME \
+          ${{ secrets.RANCHER_URL }}/k8s/clusters/c-pt57p/apis/apps/v1/namespaces/${{ inputs.NAMESPACE }}/deployments/${{ inputs.DEPLOYMENT_NAME }} \
           -d '[{"op": "replace", "path": "/spec/template/spec/containers/0/image", "value": "'$IMAGE_TAG'"}]'
