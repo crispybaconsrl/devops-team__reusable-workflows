@@ -15,6 +15,10 @@ on:
     secrets:
       base_registry_path:
         required: true
+      rancher_token:
+        required: true
+      rancher_url:
+        required: true
 
 jobs:
   deploy:
@@ -24,7 +28,7 @@ jobs:
         run: |
           export IMAGE_TAG=${{ secrets.base_registry_path }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}
           echo "Deploying to Rancher..."
-          curl -u "${{ secrets.RANCHER_TOKEN }}" \
+          curl -u "${{ secrets.rancher_token }}" \
           -X PATCH -H 'Content-Type: application/json-patch+json' \
-          ${{ secrets.RANCHER_URL }}/k8s/clusters/c-pt57p/apis/apps/v1/namespaces/${{ inputs.NAMESPACE }}/deployments/${{ inputs.DEPLOYMENT_NAME }} \
+          ${{ secrets.rancher_url }}/k8s/clusters/c-pt57p/apis/apps/v1/namespaces/${{ inputs.NAMESPACE }}/deployments/${{ inputs.DEPLOYMENT_NAME }} \
           -d '[{"op": "replace", "path": "/spec/template/spec/containers/0/image", "value": "'$IMAGE_TAG'"}]'
