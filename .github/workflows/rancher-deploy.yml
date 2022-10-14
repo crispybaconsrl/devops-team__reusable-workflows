@@ -13,16 +13,13 @@ on:
         required: true
         type: string
 
-env:
-  BASE_REGISTRY_PATH: 147868451473.dkr.ecr.eu-west-1.amazonaws.com
-
 jobs:
   deploy:
       runs-on: ubuntu-latest
       steps:
       - name: Deploy on Rancher
         run: |
-          export IMAGE_TAG=${{ env.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}
+          export IMAGE_TAG=${{ secrets.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}
           echo "Deploying to Rancher..."
           curl -u "${{ secrets.RANCHER_TOKEN }}" \
           -X PATCH -H 'Content-Type: application/json-patch+json' \

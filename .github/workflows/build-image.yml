@@ -6,9 +6,9 @@ on:
       PROJECT_NAME:
         required: true
         type: string
-
-env:
-  BASE_REGISTRY_PATH: 147868451473.dkr.ecr.eu-west-1.amazonaws.com
+      VAULT_TOKEN:
+        required: true
+        type: string
 
 jobs:   
   build:
@@ -18,7 +18,7 @@ jobs:
       uses: hashicorp/vault-action@v2.4.2
       with:
         url: https://vault.crispybacon.it
-        token: ${{ secrets.VAULT_TOKEN }}
+        token: ${{ inputs.VAULT_TOKEN }}
         secrets: |
           aws/creds/github-pipeline-access-role access_key | AWS_ACCESS_KEY_ID ;
           aws/creds/github-pipeline-access-role secret_key | AWS_SECRET_ACCESS_KEY ;
@@ -28,9 +28,9 @@ jobs:
       run: aws ecr create-repository --repository-name ${{ inputs.PROJECT_NAME }} --region eu-west-1 || true
     - uses: actions/checkout@v3
     - name: Login ECR registry
-      run: aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ env.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}
+      run: aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ secrets.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}
     - name: Build the Docker image
-      run: docker build -t ${{ env.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }} .
+      run: docker build -t ${{ secrets.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }} .
     - name: Push docker image
-      run: docker push ${{ env.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}
+      run: docker push ${{ secrets.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}
 
