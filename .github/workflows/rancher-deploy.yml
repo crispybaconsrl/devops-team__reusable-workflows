@@ -12,6 +12,9 @@ on:
       DEPLOYMENT_NAME:
         required: true
         type: string
+    secrets:
+      base_registry_path:
+        required: true
 
 jobs:
   deploy:
@@ -19,7 +22,7 @@ jobs:
       steps:
       - name: Deploy on Rancher
         run: |
-          export IMAGE_TAG=${{ secrets.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}
+          export IMAGE_TAG=${{ secrets.base_registry_path }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}
           echo "Deploying to Rancher..."
           curl -u "${{ secrets.RANCHER_TOKEN }}" \
           -X PATCH -H 'Content-Type: application/json-patch+json' \
