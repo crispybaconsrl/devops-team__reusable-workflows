@@ -6,9 +6,9 @@ on:
       PROJECT_NAME:
         required: true
         type: string
-      VAULT_TOKEN:
+    secrets:
+      vault_token:
         required: true
-        type: string
 
 jobs:   
   build:
@@ -18,7 +18,7 @@ jobs:
       uses: hashicorp/vault-action@v2.4.2
       with:
         url: https://vault.crispybacon.it
-        token: ${{ inputs.VAULT_TOKEN }}
+        token: ${{ secrets.vault_token }}
         secrets: |
           aws/creds/github-pipeline-access-role access_key | AWS_ACCESS_KEY_ID ;
           aws/creds/github-pipeline-access-role secret_key | AWS_SECRET_ACCESS_KEY ;
