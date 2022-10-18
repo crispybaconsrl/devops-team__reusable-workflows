@@ -3,7 +3,7 @@ name: Rancher Deploy
 on:
   workflow_call:
     inputs:
-      PROJECT_NAME:
+      IMAGE_TO_DEPLOY:
         required: true
         type: string
       NAMESPACE: 
@@ -13,8 +13,6 @@ on:
         required: true
         type: string
     secrets:
-      base_registry_path:
-        required: true
       rancher_token:
         required: true
       rancher_url:
