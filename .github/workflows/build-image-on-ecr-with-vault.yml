@@ -20,6 +20,10 @@ on:
       CUSTOM_IMAGE_TAG:
         required: false
         type: string
+      AWS_REGION:
+        required: false
+        type: string
+        default: eu-west-1
     
 jobs:   
   build:
