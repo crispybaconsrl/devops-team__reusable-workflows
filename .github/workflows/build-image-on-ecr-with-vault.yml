@@ -17,6 +17,9 @@ on:
         required: false
         type: string
         default: "147868451473.dkr.ecr.eu-west-1.amazonaws.com"
+      CUSTOM_IMAGE_TAG:
+        required: false
+        type: string
     
 jobs:   
   build:
@@ -39,6 +42,12 @@ jobs:
       run: aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}
     - name: Build the Docker image
       run: docker build -t ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}-${{ github.ref }} .
+    - name: Tag image with additional custom tag
+      if: ${{ inputs.BASE_REGISTRY_PATH }} != ''
+      run: docker tag ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}-${{ github.ref }} ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ inputs.CUSTOM_IMAGE_TAG }}
     - name: Push docker image
       run: docker push ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}-${{ github.ref }}
+    - name: Push additional tag docker image
+      if: ${{ inputs.BASE_REGISTRY_PATH }} != ''
+      run: docker push ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ inputs.CUSTOM_IMAGE_TAG }}
 
