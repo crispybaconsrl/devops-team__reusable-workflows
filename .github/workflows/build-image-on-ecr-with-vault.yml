@@ -46,8 +46,6 @@ jobs:
     - name: Tag image with additional custom tag
       if: ${{ inputs.CUSTOM_IMAGE_TAG != '' }}
       run: docker tag ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}-${{ github.ref_name }} ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ inputs.CUSTOM_IMAGE_TAG }}
-    - name: Debugging step
-      run: aws ecr describe-images --repository-name ma-pro-app-ecr --region eu-south-1
     - name: Push docker image
       run: docker push ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}-${{ github.ref_name }}
     - name: Push additional tag docker image
