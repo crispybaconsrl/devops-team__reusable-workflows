@@ -1,0 +1,28 @@
+name: Azure Serverless Function
+
+on:
+  workflow_call:
+    secrets:
+      AZURE_APP_ID:
+        required: true
+      AZURE_PASSWORD:
+        required: true
+     AZURE_TENANT_ID:
+        required: true
+    inputs:
+      SUBFOLDER_PATH:
+        required: true
+        type: string
+      AZURE_FUNCTION_NAME:
+        required: true
+        type: string
+      AZURE_FUNCTION_SLOT:
+        required: true
+        type: string
+
+jobs:
+  azure_monostep:
+    runs-on: ubuntu-latest
+    steps:
+    - name: build
+      run: echo "TODO FINISH!"
