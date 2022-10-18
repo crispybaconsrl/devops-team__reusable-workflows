@@ -10,6 +10,10 @@ on:
         required: false
         type: string
         default: aws_devops_tools
+      REGISTRY_PATH:
+        required: false
+        type: string
+        default: ${{ secrets.base_registry_path }}
     secrets:
       vault_token:
         required: true
@@ -36,7 +40,7 @@ jobs:
     - name: Login ECR registry
       run: aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ secrets.base_registry_path }}/${{ inputs.PROJECT_NAME }}
     - name: Build the Docker image
-      run: docker build -t ${{ secrets.base_registry_path }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }} .
+      run: docker build -t ${{ inputs.REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }} .
     - name: Push docker image
-      run: docker push ${{ secrets.base_registry_path }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}
+      run: docker push ${{ inputs.REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}
 
