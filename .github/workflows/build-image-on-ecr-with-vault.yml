@@ -21,6 +21,9 @@ on:
       CUSTOM_IMAGE_TAG:
         required: false
         type: string
+      IS_PUBLIC:
+        required: false
+        type: boolean
     
 jobs:   
   build_docker_image:
@@ -40,7 +43,11 @@ jobs:
       run: aws ecr create-repository --repository-name ${{ inputs.PROJECT_NAME }} --region eu-west-1 || true
     - uses: actions/checkout@v3
     - name: Login ECR registry
+      if: ${{ inputs.IS_PUBLIC == false || inputs.IS_PUBLIC == '' }}
       run: aws ecr get-login-password --region ${{ inputs.AWS_REGION }} | docker login --username AWS --password-stdin ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}
+    - name: Login on Public ECR Registry
+      if: ${{ inputs.IS_PUBLIC == true }}
+      run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}
     - name: Build the Docker image
       run: docker build -t ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}-${{ github.ref_name }} .
     - name: Tag image with additional custom tag
