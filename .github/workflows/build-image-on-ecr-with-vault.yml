@@ -21,6 +21,10 @@ on:
       CUSTOM_IMAGE_TAG:
         required: false
         type: string
+      CUSTOM_DOCKER_OPTIONS:
+        required: false
+        type: string
+        default: .
     
 jobs:   
   build_docker_image:
@@ -42,7 +46,7 @@ jobs:
     - name: Login ECR registry
       run: aws ecr get-login-password --region ${{ inputs.AWS_REGION }} | docker login --username AWS --password-stdin ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}
     - name: Build the Docker image
-      run: docker build -t ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}-${{ github.ref_name }} .
+      run: docker build -t ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}-${{ github.ref_name }} ${{ inputs.CUSTOM_DOCKER_OPTIONS }}
     - name: Tag image with additional custom tag
       if: ${{ inputs.CUSTOM_IMAGE_TAG != '' }}
       run: docker tag ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}-${{ github.ref_name }} ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ inputs.CUSTOM_IMAGE_TAG }}
