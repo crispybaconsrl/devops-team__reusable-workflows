@@ -23,7 +23,7 @@ on:
         type: string
     
 jobs:   
-  build:
+  build_docker_image:
     runs-on: ubuntu-latest
     steps:
     - name: Import Secrets
