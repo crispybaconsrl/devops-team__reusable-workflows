@@ -72,7 +72,7 @@ jobs:
         aws ecs register-task-definition --region ${{inputs.AWS_REGION}} --family "${{inputs.TASK_DEFINITION_NAME}}" --container-definitions "${NEW_CONTAINER_DEFINTIION}" --network-mode ${{inputs.NETWORK_MODE}} --task-role-arn ${{inputs.TASK_IAM_ROLE}} --execution-role-arn ${{inputs.TASK_IAM_ROLE}} > /dev/null
     - name: Updating the service
       run: |
-        aws ecs update-service --region $AWS_DEFAULT_REGION --cluster "${CLUSTER_NAME}" --service "${SERVICE_NAME}" --desired-count 0
-        aws ecs update-service --region $AWS_DEFAULT_REGION --cluster "${CLUSTER_NAME}" --service "${SERVICE_NAME}" --task-definition "${TASK_DEFINITION_NAME}"
-        aws ecs update-service --region $AWS_DEFAULT_REGION --cluster "${CLUSTER_NAME}" --service "${SERVICE_NAME}" --desired-count 1
+        aws ecs update-service --region ${{inputs.AWS_REGION}} --cluster "${{inputs.CLUSTER_NAME}}" --service "${{inputs.SERVICE_NAME}}" --desired-count 0
+        aws ecs update-service --region ${{inputs.AWS_REGION}} --cluster "${{inputs.CLUSTER_NAME}}" --service "${{inputs.SERVICE_NAME}}" --task-definition "${TASK_DEFINITION_NAME}"
+        aws ecs update-service --region ${{inputs.AWS_REGION}} --cluster "${{inputs.CLUSTER_NAME}}" --service "${{inputs.SERVICE_NAME}}" --desired-count 1
         echo "Deploy completed!"
