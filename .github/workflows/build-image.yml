@@ -6,6 +6,10 @@ on:
       PROJECT_NAME:
         required: true
         type: string
+      VAULT_AWS_NAME:
+        required: false
+        type: string
+        default: aws_devops_tools
     secrets:
       vault_token:
         required: true
@@ -22,8 +26,8 @@ jobs:
         url: https://vault.crispybacon.it
         token: ${{ secrets.vault_token }}
         secrets: |
-          aws/creds/github-pipeline-access-role access_key | AWS_ACCESS_KEY_ID ;
-          aws/creds/github-pipeline-access-role secret_key | AWS_SECRET_ACCESS_KEY ;
+          ${{ inputs.VAULT_AWS_NAME }}/creds/github-pipeline-access-role access_key | AWS_ACCESS_KEY_ID ;
+          ${{ inputs.VAULT_AWS_NAME }}/creds/github-pipeline-access-role secret_key | AWS_SECRET_ACCESS_KEY ;
     - name: Wait for IAM credentials to be ready
       run: sleep 10
     - name: Create ECR registry
