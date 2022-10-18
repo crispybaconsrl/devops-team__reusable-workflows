@@ -21,9 +21,6 @@ on:
       CUSTOM_IMAGE_TAG:
         required: false
         type: string
-      IS_PUBLIC:
-        required: false
-        type: boolean
     
 jobs:   
   build_docker_image:
