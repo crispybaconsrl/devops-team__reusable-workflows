@@ -40,7 +40,7 @@ jobs:
     - name: Login ECR registry
       run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ inputs.BASE_PUBLIC_REGISTRY_PATH }}
     - name: Build the Docker image
-      run: docker build -t ${{ inputs.BASE_PUBLIC_REGISTRY_PATH }}/${{ inputs.REGISTRY_NAME }}:${{ github.project_name }}-${{ github.ref_name }} .
+      run: docker build -t ${{ inputs.BASE_PUBLIC_REGISTRY_PATH }}/${{ inputs.REGISTRY_NAME }}:${{ inputs.PROJECT_NAME }}-${{ github.ref_name }} .
     - name: Push docker image
-      run: docker push public.ecr.aws/u5f6g0h4/crispy-bacon-public-ecr:${{ github.project_name }}-${{ github.ref_name }}
+      run: docker push public.ecr.aws/u5f6g0h4/crispy-bacon-public-ecr:${{ inputs.PROJECT_NAME }}-${{ github.ref_name }}
     
