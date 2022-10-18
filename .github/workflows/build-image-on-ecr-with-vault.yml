@@ -47,11 +47,11 @@ jobs:
     - name: Build the Docker image
       run: docker build -t ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}-${{ github.head_ref }} .
     - name: Tag image with additional custom tag
-      if: ${{ inputs.BASE_REGISTRY_PATH }} != ''
+      if: ${{ inputs.BASE_REGISTRY_PATH != '' }}
       run: docker tag ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}-${{ github.head_ref }} ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ inputs.CUSTOM_IMAGE_TAG }}
     - name: Push docker image
       run: docker push ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}-${{ github.head_ref }}
     - name: Push additional tag docker image
-      if: ${{ inputs.BASE_REGISTRY_PATH }} != ''
+      if: ${{ inputs.BASE_REGISTRY_PATH != '' }} 
       run: docker push ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ inputs.CUSTOM_IMAGE_TAG }}
 
