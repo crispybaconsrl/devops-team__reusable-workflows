@@ -36,7 +36,7 @@ jobs:
       run: aws ecr create-repository --repository-name ${{ inputs.PROJECT_NAME }} --region eu-west-1 || true
     - uses: actions/checkout@v3
     - name: Login ECR registry
-      run: aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ secrets.base_registry_path }}/${{ inputs.PROJECT_NAME }}
+      run: aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}
     - name: Build the Docker image
       run: docker build -t ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }} .
     - name: Push docker image
