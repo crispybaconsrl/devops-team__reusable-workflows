@@ -13,6 +13,10 @@ on:
         required: false
         type: string
         default: aws_devops_tools
+      BASE_REGISTRY_PATH:
+        required: false
+        type: string
+        default: "147868451473.dkr.ecr.eu-west-1.amazonaws.com"
     
 jobs:   
   build:
@@ -34,7 +38,7 @@ jobs:
     - name: Login ECR registry
       run: aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${{ secrets.base_registry_path }}/${{ inputs.PROJECT_NAME }}
     - name: Build the Docker image
-      run: docker build -t ${{ env.REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }} .
+      run: docker build -t ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }} .
     - name: Push docker image
-      run: docker push ${{ env.REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}
+      run: docker push ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}
 
