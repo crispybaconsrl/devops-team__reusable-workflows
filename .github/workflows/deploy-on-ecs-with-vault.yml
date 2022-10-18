@@ -1,0 +1,78 @@
+name: Deploy on ECS
+
+on:
+  workflow_call:
+    secrets:
+      vault_token:
+        required: true
+    inputs:
+      VAULT_AWS_NAME:
+        required: false
+        type: string
+        default: aws_devops_tools
+      IMAGE_TO_DEPLOY:
+        required: true
+        type: string
+      CLUSTER_NAME:
+        required: true
+        type: string
+      SERVICE_NAME:
+        required: true
+        type: string
+      TASK_DEFINITION_NAME:
+        required: true
+        type: string
+      TASK_IAM_ROLE:
+        required: true
+        type: string
+      AWS_REGION:
+        required: true
+        type: string
+      NETWORK_MODE:
+        required: true
+        type: string
+        default: awsvpc
+      REQUIRES_COMPATIBILITIES:
+        required: false
+        type: string
+      CPU:
+        required: false
+        type: string
+      MEMORY:
+        required: false
+        type: string
+      
+jobs:   
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Import Secrets
+      uses: hashicorp/vault-action@v2.4.2
+      with:
+        url: https://vault.crispybacon.it
+        token: ${{ secrets.vault_token }}
+        secrets: |
+          ${{ inputs.VAULT_AWS_NAME }}/creds/github-pipeline-access-role access_key | AWS_ACCESS_KEY_ID ;
+          ${{ inputs.VAULT_AWS_NAME }}/creds/github-pipeline-access-role secret_key | AWS_SECRET_ACCESS_KEY ;
+    - name: Wait for IAM credentials to be ready
+      run: sleep 10
+    - name: Register new container definition (Fargate)
+      if: ${{inputs.CPU}} != '' && ${{inputs.MEMORY}} != '' && ${{inputs.REQUIRES_COMPATIBILITIES}} != ''
+      run: |
+        TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition "${{inputs.TASK_DEFINITION_NAME}}" --region ${{inputs.AWS_REGION}})
+        NEW_CONTAINER_DEFINTIION=$(echo $TASK_DEFINITION | jq --arg IMAGE "${{inputs.IMAGE_TO_DEPLOY}}" '.taskDefinition.containerDefinitions[0].image = $IMAGE | .taskDefinition.containerDefinitions[0]')
+        echo "Registering new container definition..."
+        aws ecs register-task-definition --region ${{inputs.AWS_REGION}} --family "${{inputs.TASK_DEFINITION_NAME}}" --container-definitions "${NEW_CONTAINER_DEFINTIION}" --requires-compatibilities ${{inputs.REQUIRES_COMPATIBILITIES}} --network-mode ${{inputs.NETWORK_MODE}} --cpu ${{inputs.CPU}} --memory ${{inputs.MEMORY}} --task-role-arn ${{inputs.TASK_IAM_ROLE}} --execution-role-arn ${{inputs.TASK_IAM_ROLE}} > /dev/null
+    - name: Register new container definition (EC2 based)
+      if: ${{inputs.CPU}} == '' || ${{inputs.MEMORY}} == '' || ${{inputs.REQUIRES_COMPATIBILITIES}} == ''
+      run: |
+        TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition "${{inputs.TASK_DEFINITION_NAME}}" --region ${{inputs.AWS_REGION}})
+        NEW_CONTAINER_DEFINTIION=$(echo $TASK_DEFINITION | jq --arg IMAGE "${{inputs.IMAGE_TO_DEPLOY}}" '.taskDefinition.containerDefinitions[0].image = $IMAGE | .taskDefinition.containerDefinitions[0]')
+        echo "Registering new container definition..."
+        aws ecs register-task-definition --region ${{inputs.AWS_REGION}} --family "${{inputs.TASK_DEFINITION_NAME}}" --container-definitions "${NEW_CONTAINER_DEFINTIION}" --network-mode ${{inputs.NETWORK_MODE}} --task-role-arn ${{inputs.TASK_IAM_ROLE}} --execution-role-arn ${{inputs.TASK_IAM_ROLE}} > /dev/null
+- name: Updating the service
+      run: |
+        aws ecs update-service --region $AWS_DEFAULT_REGION --cluster "${CLUSTER_NAME}" --service "${SERVICE_NAME}" --desired-count 0
+        aws ecs update-service --region $AWS_DEFAULT_REGION --cluster "${CLUSTER_NAME}" --service "${SERVICE_NAME}" --task-definition "${TASK_DEFINITION_NAME}"
+        aws ecs update-service --region $AWS_DEFAULT_REGION --cluster "${CLUSTER_NAME}" --service "${SERVICE_NAME}" --desired-count 1
+        echo "Deploy completed!"
