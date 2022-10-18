@@ -49,6 +49,6 @@ jobs:
     - name: Push docker image
       run: docker push ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}-${{ github.ref_name }}
     - name: Push additional tag docker image
-      if: ${{ inputs.CUSTOM_IMAGE_TAG != '' }} 
+      if: ${{ inputs.CUSTOM_IMAGE_TAG != '' }}
       run: docker push ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ inputs.CUSTOM_IMAGE_TAG }}
 
