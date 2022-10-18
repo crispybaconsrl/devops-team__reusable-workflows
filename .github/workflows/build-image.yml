@@ -2,6 +2,11 @@ name: Build image
 
 on:
   workflow_call:
+    secrets:
+      vault_token:
+        required: true
+      base_registry_path:
+        required: true
     inputs:
       PROJECT_NAME:
         required: true
@@ -14,12 +19,7 @@ on:
         required: false
         type: string
         default: ${{ secrets.base_registry_path }}
-    secrets:
-      vault_token:
-        required: true
-      base_registry_path:
-        required: true
-
+    
 jobs:   
   build:
     runs-on: ubuntu-latest
