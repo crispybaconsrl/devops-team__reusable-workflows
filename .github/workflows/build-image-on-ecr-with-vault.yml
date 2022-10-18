@@ -10,20 +10,17 @@ on:
         required: true
         type: string
       VAULT_AWS_NAME:
-        required: false
+        required: true
         type: string
-        default: aws_devops_tools
       BASE_REGISTRY_PATH:
-        required: false
+        required: true
         type: string
-        default: "147868451473.dkr.ecr.eu-west-1.amazonaws.com"
+      AWS_REGION:
+        required: true
+        type: string
       CUSTOM_IMAGE_TAG:
         required: false
         type: string
-      AWS_REGION:
-        required: false
-        type: string
-        default: eu-west-1
     
 jobs:   
   build:
