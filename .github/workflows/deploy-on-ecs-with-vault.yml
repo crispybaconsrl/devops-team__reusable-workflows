@@ -73,6 +73,6 @@ jobs:
     - name: Updating the service
       run: |
         aws ecs update-service --region ${{inputs.AWS_REGION}} --cluster "${{inputs.CLUSTER_NAME}}" --service "${{inputs.SERVICE_NAME}}" --desired-count 0
-        aws ecs update-service --region ${{inputs.AWS_REGION}} --cluster "${{inputs.CLUSTER_NAME}}" --service "${{inputs.SERVICE_NAME}}" --task-definition "${TASK_DEFINITION_NAME}"
+        aws ecs update-service --region ${{inputs.AWS_REGION}} --cluster "${{inputs.CLUSTER_NAME}}" --service "${{inputs.SERVICE_NAME}}" --task-definition "${{inputs.TASK_DEFINITION_NAME}}"
         aws ecs update-service --region ${{inputs.AWS_REGION}} --cluster "${{inputs.CLUSTER_NAME}}" --service "${{inputs.SERVICE_NAME}}" --desired-count 1
         echo "Deploy completed!"
