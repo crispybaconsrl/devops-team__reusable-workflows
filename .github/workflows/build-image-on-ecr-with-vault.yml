@@ -45,12 +45,12 @@ jobs:
     - name: Login ECR registry
       run: aws ecr get-login-password --region ${{ inputs.AWS_REGION }} | docker login --username AWS --password-stdin ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}
     - name: Build the Docker image
-      run: docker build -t ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}-${{ github.head_ref }} .
+      run: docker build -t ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}-${{ github.ref_name }} .
     - name: Tag image with additional custom tag
       if: ${{ inputs.CUSTOM_IMAGE_TAG != '' }}
-      run: docker tag ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}-${{ github.head_ref }} ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ inputs.CUSTOM_IMAGE_TAG }}
+      run: docker tag ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}-${{ github.ref_name }} ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ inputs.CUSTOM_IMAGE_TAG }}
     - name: Push docker image
-      run: docker push ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}-${{ github.head_ref }}
+      run: docker push ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}-${{ github.ref_name }}
     - name: Push additional tag docker image
       if: ${{ inputs.CUSTOM_IMAGE_TAG != '' }} 
       run: docker push ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ inputs.CUSTOM_IMAGE_TAG }}
