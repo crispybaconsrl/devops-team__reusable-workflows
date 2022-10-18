@@ -43,7 +43,7 @@ on:
         type: string
       
 jobs:   
-  build:
+  ecs:
     runs-on: ubuntu-latest
     steps:
     - name: Import Secrets
