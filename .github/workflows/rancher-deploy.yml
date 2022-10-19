@@ -24,7 +24,7 @@ jobs:
       steps:
       - name: Deploy on Rancher
         run: |
-          export IMAGE_TAG=${{ secrets.base_registry_path }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}
+          export IMAGE_TAG=${{ inputs.IMAGE_TO_DEPLOY }}
           echo "Deploying to Rancher..."
           curl -u "${{ secrets.rancher_token }}" \
           -X PATCH -H 'Content-Type: application/json-patch+json' \
