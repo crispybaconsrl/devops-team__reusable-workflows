@@ -41,7 +41,7 @@ jobs:
     - name: Wait for IAM credentials to be ready
       run: sleep 10
     - name: Create ECR registry
-      run: aws ecr create-repository --repository-name ${{ inputs.PROJECT_NAME }} --region eu-west-1 || true
+      run: aws ecr create-repository --repository-name ${{ inputs.PROJECT_NAME }} --region ${{ inputs.AWS_REGION }} || true
     - uses: actions/checkout@v3
     - name: Login ECR registry
       run: aws ecr get-login-password --region ${{ inputs.AWS_REGION }} | docker login --username AWS --password-stdin ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}
