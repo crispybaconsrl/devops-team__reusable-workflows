@@ -58,10 +58,5 @@ jobs:
     - name: Push additional tag docker image
       if: ${{ inputs.CUSTOM_IMAGE_TAG != '' }}
       run: docker push ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ inputs.CUSTOM_IMAGE_TAG }}
-    - name: Cloudfront cache invalidation
-      if: ${{ inputs.DISTRIBUTION_ID != '' }}
-      uses: crispybaconsrl/devops-team__reusable-workflows/.github/workflows/cloudfront-cache-invalidation.yml@master
-      with:
-        DISTRIBUTION_ID: ${{ inputs.DISTRIBUTION_ID }}
-        AWS_REGION: ${{ inputs.AWS_REGION }}
+    
 
