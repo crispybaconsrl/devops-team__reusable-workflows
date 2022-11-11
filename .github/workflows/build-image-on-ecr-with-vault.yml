@@ -25,6 +25,9 @@ on:
         required: false
         type: string
         default: .
+      DISTRIBUTION_ID:
+        required: false
+        type: string
     
 jobs:   
   build_docker_image:
@@ -41,7 +44,7 @@ jobs:
     - name: Wait for IAM credentials to be ready
       run: sleep 10
     - name: Create ECR registry
-      run: aws ecr create-repository --repository-name ${{ inputs.PROJECT_NAME }} --region ${{ inputs.AWS_REGION }} || true
+      run: aws ecr create-repository --repository-name ${{ inputs.PROJECT_NAME }} --region ${{ inputs.AWS_REGION }} || true
     - uses: actions/checkout@v3
     - name: Login ECR registry
       run: aws ecr get-login-password --region ${{ inputs.AWS_REGION }} | docker login --username AWS --password-stdin ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}
@@ -55,4 +58,10 @@ jobs:
     - name: Push additional tag docker image
       if: ${{ inputs.CUSTOM_IMAGE_TAG != '' }}
       run: docker push ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ inputs.CUSTOM_IMAGE_TAG }}
+    - name: Cloudfront cache invalidation
+      if: ${{ inputs.DISTRIBUTION_ID != '' }}
+      uses: crispybaconsrl/devops-team__reusable-workflows/.github/workflows/cloudfront-cache-invalidation.yml@master
+      with:
+        DISTRIBUTION_ID: ${{ inputs.DISTRIBUTION_ID }}
+        AWS_REGION: ${{ inputs.AWS_REGION }}
 

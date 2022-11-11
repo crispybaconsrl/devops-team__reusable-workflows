@@ -1,0 +1,17 @@
+name: Cloudfront cache invalidation
+
+on:
+  inputs:
+    DISTRIBUTION_ID:
+      required: true
+      type: string
+    AWS_REGION:
+      required: true
+      type: string
+
+jobs:
+  cloudfront-cache-invalidation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: cache invalidation on distribution ID ${{ inputs.DISTRIBUTION_ID }}
+        run: aws cloudfront create-invalidation --distribution-id ${{ inputs.DISTRIBUTION_ID }} --paths "/*" "/**/*" --region ${{ inputs.AWS_REGION }}
