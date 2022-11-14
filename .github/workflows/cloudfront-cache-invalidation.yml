@@ -1,13 +1,14 @@
 name: Cloudfront cache invalidation
 
 on:
-  inputs:
-    DISTRIBUTION_ID:
-      required: true
-      type: string
-    AWS_REGION:
-      required: true
-      type: string
+  workflow_call:
+    inputs:
+      DISTRIBUTION_ID:
+        required: true
+        type: string
+      AWS_REGION:
+        required: true
+        type: string
 
 jobs:
   cloudfront-cache-invalidation:
