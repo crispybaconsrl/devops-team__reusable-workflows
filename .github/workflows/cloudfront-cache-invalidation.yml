@@ -2,6 +2,9 @@ name: Cloudfront cache invalidation
 
 on:
   workflow_call:
+    secrets:
+      vault_token:
+        required: true
     inputs:
       DISTRIBUTION_ID:
         required: true
