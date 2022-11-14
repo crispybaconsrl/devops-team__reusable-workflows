@@ -60,5 +60,8 @@ jobs:
       run: docker push ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ inputs.CUSTOM_IMAGE_TAG }}
     - name: Cloudfront cache invalidation
       if: ${{ inputs.DISTRIBUTION_ID != '' }}
-      run: aws cloudfront create-invalidation --distribution-id ${{ inputs.DISTRIBUTION_ID }} --paths "/*" "/**/*" --region ${{ inputs.AWS_REGION }}
+      run: |
+        echo ${{inputs.DISTRIBUTION_ID}}
+        echo ${{ inputs.AWS_REGION }}
+        aws cloudfront create-invalidation --distribution-id ${{ inputs.DISTRIBUTION_ID }} --paths "/*" "/**/*" --region ${{ inputs.AWS_REGION }}
 
