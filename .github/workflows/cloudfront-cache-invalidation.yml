@@ -10,8 +10,9 @@ on:
         required: true
         type: string
       VAULT_AWS_NAME:
-        required: true
+        required: false
         type: string
+        default: aws_devops_tools
       AWS_REGION:
         required: true
         type: string
