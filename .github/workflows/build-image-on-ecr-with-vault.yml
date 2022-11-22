@@ -25,13 +25,16 @@ on:
         required: false
         type: string
         default: .
+      WORKDIR:
+        required: false
+        type: string
     
 jobs:   
   build_docker_image:
     runs-on: ubuntu-latest
     steps:
     - name: Import Secrets
-      uses: hashicorp/vault-action@v2.4.3
+      uses: hashicorp/vault-action@v2.4.2
       with:
         url: https://vault.crispybacon.it
         token: ${{ secrets.vault_token }}
@@ -46,6 +49,11 @@ jobs:
     - name: Login ECR registry
       run: aws ecr get-login-password --region ${{ inputs.AWS_REGION }} | docker login --username AWS --password-stdin ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}
     - name: Build the Docker image
+      if: ${{ inputs.WORKDIR == '' }}
+      run: docker build -t ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}-${{ github.ref_name }} ${{ inputs.CUSTOM_DOCKER_OPTIONS }}
+    - name: Build the Docker image in specific workdir
+      if: ${{ inputs.WORKDIR != '' }}
+      working-directory: ./${{ inputs.WORKDIR }}
       run: docker build -t ${{ inputs.BASE_REGISTRY_PATH }}/${{ inputs.PROJECT_NAME }}:${{ github.sha }}-${{ github.ref_name }} ${{ inputs.CUSTOM_DOCKER_OPTIONS }}
     - name: Tag image with additional custom tag
       if: ${{ inputs.CUSTOM_IMAGE_TAG != '' }}
