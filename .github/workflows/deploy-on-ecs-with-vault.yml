@@ -80,7 +80,7 @@ jobs:
         echo "Registering new container definition..."
         aws ecs register-task-definition --region ${{inputs.AWS_REGION}} --family "${{inputs.TASK_DEFINITION_NAME}}" --container-definitions "${NEW_CONTAINER_DEFINTIION}" --requires-compatibilities ${{inputs.REQUIRES_COMPATIBILITIES}} --network-mode ${{inputs.NETWORK_MODE}} --cpu ${{inputs.CPU}} --memory ${{inputs.MEMORY}} --task-role-arn ${{inputs.TASK_IAM_ROLE}} --execution-role-arn ${{inputs.TASK_IAM_ROLE}} --volumes ''{"name":"${{inputs.VOLUME_NAME}}","efsVolumeConfiguration":{"fileSystemId":"${{inputs.VOLUME_ID}}","rootDirectory":"${{inputs.VOLUME_ROOT_DIR}}","transitEncryption":"ENABLED"}}'' > /dev/null
     - name: Register new container definition (EC2 based)
-      if: ${{inputs.CPU == '' || inputs.MEMORY == '' || inputs.REQUIRES_COMPATIBILITIES == '' || inputs.VOLUMES == ''}}
+      if: ${{inputs.CPU == '' || inputs.MEMORY == '' || inputs.REQUIRES_COMPATIBILITIES == '' || inputs.VOLUME_NAME == '' || inputs.VOLUME_ID == '' || inputs.VOLUME_ROOT_DIR == ''}}
       run: |
         TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition "${{inputs.TASK_DEFINITION_NAME}}" --region ${{inputs.AWS_REGION}})
         NEW_CONTAINER_DEFINTIION=$(echo $TASK_DEFINITION | jq --arg IMAGE "${{inputs.IMAGE_TO_DEPLOY}}" '.taskDefinition.containerDefinitions[0].image = $IMAGE | .taskDefinition.containerDefinitions[0]')
