@@ -26,7 +26,7 @@ jobs:
         run: |
           export IMAGE_TAG=${{ inputs.IMAGE_TO_DEPLOY }}
           echo "Deploying to Rancher..."
-          curl -u "${{ secrets.rancher_token }}" \
+          curl --fail -u "${{ secrets.rancher_token }}" \
           -X PATCH -H 'Content-Type: application/json-patch+json' \
           ${{ secrets.rancher_url }}/k8s/clusters/c-pt57p/apis/apps/v1/namespaces/${{ inputs.NAMESPACE }}/deployments/${{ inputs.DEPLOYMENT_NAME }} \
           -d '[{"op": "replace", "path": "/spec/template/spec/containers/0/image", "value": "'$IMAGE_TAG'"}]'
