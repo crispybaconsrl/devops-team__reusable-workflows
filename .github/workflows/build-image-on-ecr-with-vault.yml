@@ -5,6 +5,22 @@ on:
     secrets:
       vault_token:
         required: true
+      ANALYTICS_ID_UAT:
+        required: true
+      RECAPTCHA_SITE_KEY_UAT:
+        required: true
+      CONTENTFUL_SPACE_ID_UAT:
+        required: true
+      CONTENTFUL_ACCESS_TOKEN_UAT:
+        required: true
+      ANALYTICS_ID_PROD:
+        required: true
+      RECAPTCHA_SITE_KEY_PROD:
+        required: true
+      CONTENTFUL_SPACE_ID_PROD:
+        required: true
+      CONTENTFUL_ACCESS_TOKEN_PROD:
+        required: true
     inputs:
       PROJECT_NAME:
         required: true
