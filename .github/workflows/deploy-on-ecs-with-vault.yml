@@ -57,7 +57,7 @@ jobs:
     - name: Wait for IAM credentials to be ready
       run: sleep 10
     - name: Register new container definition (Fargate)
-      if: ${{inputs.CPU != '' && inputs.MEMORY != '' && inputs.REQUIRES_COMPATIBILITIES != ''}}
+      if: ${{inputs.CPU != '' && inputs.MEMORY != '' && inputs.REQUIRES_COMPATIBILITIES != '' && inputs.TASK_IAM_ROLE != ''}}
       run: |
         TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition "${{inputs.TASK_DEFINITION_NAME}}" --region ${{inputs.AWS_REGION}})
         NEW_CONTAINER_DEFINTIION=$(echo $TASK_DEFINITION | jq --arg IMAGE "${{inputs.IMAGE_TO_DEPLOY}}" '.taskDefinition.containerDefinitions[0].image = $IMAGE | .taskDefinition.containerDefinitions[0]')
