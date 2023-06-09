@@ -25,6 +25,9 @@ on:
       TASK_IAM_ROLE:
         required: false
         type: string
+      EXECUTION_IAM_ROLE:
+        required: false
+        type: string
       AWS_REGION:
         required: true
         type: string
@@ -70,6 +73,13 @@ jobs:
         NEW_CONTAINER_DEFINTIION=$(echo $TASK_DEFINITION | jq --arg IMAGE "${{inputs.IMAGE_TO_DEPLOY}}" '.taskDefinition.containerDefinitions[0].image = $IMAGE | .taskDefinition.containerDefinitions[0]')
         echo "Registering new container definition..."
         aws ecs register-task-definition --region ${{inputs.AWS_REGION}} --family "${{inputs.TASK_DEFINITION_NAME}}" --container-definitions "${NEW_CONTAINER_DEFINTIION}" --network-mode ${{inputs.NETWORK_MODE}} > /dev/null
+    - name: Register new container definition if you are using secrets (EC2 based, required execution iam role)
+      if: ${{inputs.CPU == '' || inputs.MEMORY == '' || inputs.REQUIRES_COMPATIBILITIES == '' || inputs.TASK_IAM_ROLE == '' || inputs.EXECUTION_IAM_ROLE != ''}}
+      run: |
+        TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition "${{inputs.TASK_DEFINITION_NAME}}" --region ${{inputs.AWS_REGION}})
+        NEW_CONTAINER_DEFINTIION=$(echo $TASK_DEFINITION | jq --arg IMAGE "${{inputs.IMAGE_TO_DEPLOY}}" '.taskDefinition.containerDefinitions[0].image = $IMAGE | .taskDefinition.containerDefinitions[0]')
+        echo "Registering new container definition..."
+        aws ecs register-task-definition --region ${{inputs.AWS_REGION}} --family "${{inputs.TASK_DEFINITION_NAME}}" --container-definitions "${NEW_CONTAINER_DEFINTIION}" --network-mode ${{inputs.NETWORK_MODE}} --execution-role-arn ${{inputs.EXECUTION_IAM_ROLE}} > /dev/null
     - name: Updating the service
       run: |
         aws ecs update-service --region ${{inputs.AWS_REGION}} --cluster "${{inputs.CLUSTER_NAME}}" --service "${{inputs.SERVICE_NAME}}" --task-definition "${{inputs.TASK_DEFINITION_NAME}}" --force-new-deployment
