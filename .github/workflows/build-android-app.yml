@@ -24,22 +24,18 @@ on:
       FLAVOR:
         required: true
         type: string
+    secrets:
       JSON_PLAY_STORE_API_KEY:
         required: true
-        type: string
       STORE_FILE:
         required: true
-        type: string
       STORE_PASSWORD:
         required: true
-        type: string
       KEY_PASSWORD:
         required: true
-        type: string
       KEY_ALIAS:
         required: true
-        type: string
-
+        
 jobs:
   build:
     name: Build APK
