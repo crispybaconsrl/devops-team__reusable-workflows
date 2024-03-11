@@ -58,7 +58,7 @@ jobs:
       - name: Download a single artifact
         uses: actions/download-artifact@v4
         with:
-          name: Release ${{ env.FLAVOR }} - version ${{ env.ANDROID_VERSION_NAME }}, build ${{ env.ANDROID_VERSION_CODE }}
+          name: Release ${{ env.FLAVOR }}
       - name: Prepare Android json service account
         run: echo "${{ secrets.JSON_PLAY_STORE_API_KEY }}" | base64 --decode > api_key.json
       - name: Prepare Android keystore
