@@ -15,9 +15,6 @@ on:
       IOS_APP_IDENTIFIER:
         required: true
         type: string
-      IOS_EXPORT_OPTIONS_PLIST_PATH:
-        required: true
-        type: string
       IOS_DISTRIBUTE_EXTERNAL:
         required: true
         type: string
