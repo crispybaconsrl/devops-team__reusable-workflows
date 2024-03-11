@@ -3,9 +3,6 @@ name: Build Android app
 on:
   workflow_call:
     inputs:
-      ANDROID_ENABLE_UPLOAD:
-        type: string
-        required: true
       ANDROID_TRACK:
         required: true
         type: string
@@ -41,7 +38,6 @@ env:
   ANDROID_RELEASE_STATUS: ${{ inputs.ANDROID_RELEASE_STATUS }}
   ANDROID_PACKAGE_NAME: ${{ inputs.ANDROID_PACKAGE_NAME }}
   FLAVOR: ${{ inputs.FLAVOR }}
-  ANDROID_ENABLE_UPLOAD: ${{ inputs.ANDROID_ENABLE_UPLOAD }}
   ANDROID_BUILD_PATH: build/app/outputs/bundle/${{ inputs.FLAVOR }}Release/app-${{ inputs.FLAVOR }}-release.aab
   
 jobs:
