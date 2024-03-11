@@ -1,0 +1,90 @@
+name: Build Android app
+
+on:
+  workflow_call:
+    inputs:
+      ANDROID_ENABLE_UPLOAD:
+        type: choice
+        required: true
+      ANDROID_TRACK:
+        required: true
+        type: string
+      ANDROID_RELEASE_STATUS:
+        required: true
+        type: string
+      ANDROID_PACKAGE_NAME:
+        required: true
+        type: string
+      ANDROID_VERSION_NAME:
+        required: false
+        type: string
+      ANDROID_VERSION_CODE:
+        required: false
+        type: string
+      FLAVOR:
+        required: true
+        type: string
+      JSON_PLAY_STORE_API_KEY:
+        required: true
+        type: string
+      STORE_FILE:
+        required: true
+        type: string
+      STORE_PASSWORD:
+        required: true
+        type: string
+      KEY_PASSWORD:
+        required: true
+        type: string
+      KEY_ALIAS:
+        required: true
+        type: string
+
+jobs:
+  build:
+    name: Build APK
+#    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS, ARM64, mr-mac]
+    defaults:
+      run:
+        working-directory: android
+    steps:
+      - uses: actions/checkout@v4
+#      - uses: actions/setup-java@v4
+#        with:
+#          distribution: 'zulu'
+#          java-version: '17'
+#      - name: Setup Android SDK
+#        uses: android-actions/setup-android@v3
+#      - name: Gradle Build Action
+#        uses: gradle/gradle-build-action@v3.1.0
+#      - uses: subosito/flutter-action@v2
+#        with:
+#          flutter-version: '3.16.8'
+#          channel: 'stable'
+#          cache: true
+      - name: Prepare Android json service account
+        run: echo "${{ inputs.JSON_PLAY_STORE_API_KEY }}" | base64 --decode > api_key.json
+      - name: Prepare Android keystore
+        run: echo "${{ inputs.STORE_FILE }}" | base64 --decode > app/ansa.keystore
+      - name: Create key.properties
+        run: |
+          mkdir -p key
+          echo "storeFile=ansa.keystore" > key/key.properties
+          echo "storePassword=${{ inputs.STORE_PASSWORD }}" >> key/key.properties
+          echo "keyPassword=${{ inputs.KEY_PASSWORD }}" >> key/key.properties
+          echo "keyAlias=${{ inputs.KEY_ALIAS }}" >> key/key.properties
+      - name: Install Dependencies
+        run: flutter pub get
+      - name: Check app and set version
+        run: fastlane versioning
+#        env:
+#          ANDROID_VERSION_NAME: 1.0.7
+#          ANDROID_VERSION_CODE: 1
+      - name: Build appbundle
+        run: fastlane build
+#      - name: Upload Artifact to Play Store with Fastlane
+#        run: fastlane deploy
+#        env:
+#          ANDROID_ENABLE_UPLOAD: ${{ inputs.ANDROID_ENABLE_UPLOAD }}
+
