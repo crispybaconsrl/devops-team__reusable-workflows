@@ -1,0 +1,71 @@
+name: Upload Artifact to Play Store
+
+on:
+  workflow_call:
+    inputs:
+      ANDROID_ENABLE_UPLOAD:
+        type: string
+        required: true
+      ANDROID_TRACK:
+        required: true
+        type: string
+      ANDROID_RELEASE_STATUS:
+        required: true
+        type: string
+      ANDROID_PACKAGE_NAME:
+        required: true
+        type: string
+      ANDROID_VERSION_NAME:
+        required: false
+        type: string
+      ANDROID_VERSION_CODE:
+        required: false
+        type: string
+      FLAVOR:
+        required: true
+        type: string
+    secrets:
+      JSON_PLAY_STORE_API_KEY:
+        required: true
+      STORE_FILE:
+        required: true
+      STORE_PASSWORD:
+        required: true
+      KEY_PASSWORD:
+        required: true
+      KEY_ALIAS:
+        required: true
+
+env:
+  ANDROID_TRACK: ${{ inputs.ANDROID_TRACK }}
+  ANDROID_RELEASE_STATUS: ${{ inputs.ANDROID_RELEASE_STATUS }}
+  ANDROID_PACKAGE_NAME: ${{ inputs.ANDROID_PACKAGE_NAME }}
+  FLAVOR: ${{ inputs.FLAVOR }}
+  ANDROID_ENABLE_UPLOAD: ${{ inputs.ANDROID_ENABLE_UPLOAD }}
+  ANDROID_BUILD_PATH: build/app/outputs/bundle/${{ inputs.FLAVOR }}Release/app-${{ inputs.FLAVOR }}-release.aab
+  
+jobs:
+  upload:
+    name: Upload Artifact
+    if: ${{ inputs.ANDROID_ENABLE_UPLOAD }}
+#    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS, ARM64, mr-mac]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download a single artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Release ${{ env.FLAVOR }}
+      - name: Prepare Android json service account
+        run: echo "${{ secrets.JSON_PLAY_STORE_API_KEY }}" | base64 --decode > api_key.json
+      - name: Prepare Android keystore
+        run: echo "${{ secrets.STORE_FILE }}" | base64 --decode > app/ansa.keystore
+      - name: Create key.properties
+        run: |
+          mkdir -p key
+          echo "storeFile=ansa.keystore" > key/key.properties
+          echo "storePassword=${{ secrets.STORE_PASSWORD }}" >> key/key.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> key/key.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> key/key.properties
+      - name: Upload Artifact to Play Store
+        run: echo "fastlane deploy"
