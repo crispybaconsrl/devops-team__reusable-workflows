@@ -35,7 +35,14 @@ on:
         required: true
       KEY_ALIAS:
         required: true
-        
+
+env:
+  ANDROID_TRACK: ${{ inputs.ANDROID_TRACK }}
+  ANDROID_RELEASE_STATUS: ${{ inputs.ANDROID_RELEASE_STATUS }}
+  ANDROID_PACKAGE_NAME: ${{ inputs.ANDROID_PACKAGE_NAME }}
+  FLAVOR: ${{ inputs.FLAVOR }}
+  ANDROID_ENABLE_UPLOAD: ${{ inputs.ANDROID_ENABLE_UPLOAD }}
+  
 jobs:
   build:
     name: Build APK
