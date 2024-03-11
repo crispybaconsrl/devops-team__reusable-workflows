@@ -94,6 +94,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Releases
-          path: |
-            build/app/outputs/bundle/$FLAVORRelease/app-$FLAVOR-release.aab
+          path: build/app/outputs/bundle/${{ inputs.FLAVOR }}Release/app-${{ inputs.FLAVOR }}-release.aab
+          retention-days: 1
 
