@@ -15,18 +15,6 @@ on:
       IOS_EXPORT_OPTIONS_PLIST_PATH:
         required: true
         type: string
-      IOS_DISTRIBUTE_EXTERNAL:
-        required: true
-        type: string
-      IOS_NOTIFY_EXTERNAL_TESTERS:
-        required: true
-        type: string
-      IOS_TESTERS_GROUPS:
-        required: true
-        type: string
-      IOS_SUBMIT_BETA_REVIEW:
-        required: true
-        type: string
       FLAVOR:
         required: true
         type: string
@@ -47,10 +35,6 @@ env:
   IOS_ISSUER_ID: ${{ inputs.IOS_ISSUER_ID }}
   IOS_APP_IDENTIFIER: ${{ inputs.IOS_APP_IDENTIFIER }}
   IOS_EXPORT_OPTIONS_PLIST_PATH: ${{ inputs.IOS_EXPORT_OPTIONS_PLIST_PATH }}
-  IOS_DISTRIBUTE_EXTERNAL: ${{ inputs.IOS_DISTRIBUTE_EXTERNAL }}
-  IOS_NOTIFY_EXTERNAL_TESTERS: ${{ inputs.IOS_NOTIFY_EXTERNAL_TESTERS }}
-  IOS_TESTERS_GROUPS: ${{ inputs.IOS_TESTERS_GROUPS }}
-  IOS_SUBMIT_BETA_REVIEW: ${{ inputs.IOS_SUBMIT_BETA_REVIEW }}
   FLAVOR: ${{ inputs.FLAVOR }}
   IOS_BUILD_PATH: build/ios/ipa/dab.ipa
   
