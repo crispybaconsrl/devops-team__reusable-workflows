@@ -52,7 +52,7 @@ env:
   IOS_TESTERS_GROUPS: ${{ inputs.IOS_TESTERS_GROUPS }}
   IOS_SUBMIT_BETA_REVIEW: ${{ inputs.IOS_SUBMIT_BETA_REVIEW }}
   FLAVOR: ${{ inputs.FLAVOR }}
-  IOS_BUILD_PATH: build/ios/ipa/dab.ipa
+  IOS_BUILD_PATH: dab.ipa
   IOS_ENABLE_UPLOAD: ${{ inputs.IOS_ENABLE_UPLOAD }}
 
 jobs:
