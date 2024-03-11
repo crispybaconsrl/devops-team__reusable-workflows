@@ -42,6 +42,7 @@ env:
   ANDROID_PACKAGE_NAME: ${{ inputs.ANDROID_PACKAGE_NAME }}
   FLAVOR: ${{ inputs.FLAVOR }}
   ANDROID_ENABLE_UPLOAD: ${{ inputs.ANDROID_ENABLE_UPLOAD }}
+  ANDROID_BUILD_PATH: build/app/outputs/bundle/${{ inputs.FLAVOR }}Release/app-${{ inputs.FLAVOR }}-release.aab
   
 jobs:
   build:
@@ -93,7 +94,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Releases
-          path: build/app/outputs/bundle/${{ inputs.FLAVOR }}Release/app-${{ inputs.FLAVOR }}-release.aab
+          name: Release ${{ env.FLAVOR }}
+          path: ${{ env.ANDROID_BUILD_PATH }}
           retention-days: 1
 
