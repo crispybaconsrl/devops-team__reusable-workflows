@@ -60,16 +60,16 @@ jobs:
 #          channel: 'stable'
 #          cache: true
       - name: Prepare Android json service account
-        run: echo "${{ inputs.JSON_PLAY_STORE_API_KEY }}" | base64 --decode > api_key.json
+        run: echo "${{ secrets.JSON_PLAY_STORE_API_KEY }}" | base64 --decode > api_key.json
       - name: Prepare Android keystore
-        run: echo "${{ inputs.STORE_FILE }}" | base64 --decode > app/ansa.keystore
+        run: echo "${{ secrets.STORE_FILE }}" | base64 --decode > app/ansa.keystore
       - name: Create key.properties
         run: |
           mkdir -p key
           echo "storeFile=ansa.keystore" > key/key.properties
-          echo "storePassword=${{ inputs.STORE_PASSWORD }}" >> key/key.properties
-          echo "keyPassword=${{ inputs.KEY_PASSWORD }}" >> key/key.properties
-          echo "keyAlias=${{ inputs.KEY_ALIAS }}" >> key/key.properties
+          echo "storePassword=${{ secrets.STORE_PASSWORD }}" >> key/key.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> key/key.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> key/key.properties
       - name: Install Dependencies
         run: flutter pub get
       - name: Check app and set version
