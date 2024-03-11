@@ -90,7 +90,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Release ${{ env.FLAVOR }} - version ${{ env.ANDROID_VERSION_NAME }}, build ${{ env.ANDROID_VERSION_CODE }}
+          name: Release ${{ env.FLAVOR }}
           path: ${{ env.ANDROID_BUILD_PATH }}
           retention-days: 1
 
