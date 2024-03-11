@@ -46,7 +46,7 @@ env:
   
 jobs:
   upload:
-    name: Upload Artifact
+    name: Upload Artifact to Play Store
     if: ${{ inputs.ANDROID_ENABLE_UPLOAD }}
 #    runs-on: ubuntu-latest
     runs-on: [self-hosted, macOS, ARM64, mr-mac]
