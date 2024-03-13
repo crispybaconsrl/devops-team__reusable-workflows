@@ -47,8 +47,9 @@ env:
 jobs:
   upload:
     name: Upload Artifact to Play Store
-    if: ${{ inputs.ANDROID_ENABLE_UPLOAD != 'false' }} 
-    runs-on: [self-hosted, macOS, X64, mobile-1]
+    if: ${{ inputs.ANDROID_ENABLE_UPLOAD != 'false' }}
+    runs-on:
+      group: crispy-self-hosted-runners
     defaults:
       run:
         working-directory: android

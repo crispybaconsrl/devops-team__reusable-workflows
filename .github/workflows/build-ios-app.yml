@@ -41,7 +41,8 @@ env:
 jobs:
   build:
     name: Build iOS
-    runs-on: [self-hosted, macOS, X64, mobile-1]
+    runs-on:
+      group: crispy-self-hosted-runners
     defaults:
       run:
         working-directory: ios

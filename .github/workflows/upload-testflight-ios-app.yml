@@ -58,8 +58,9 @@ env:
 jobs:
   upload:
     name: Upload Artifact to TestFlight
-    if: ${{ inputs.IOS_ENABLE_UPLOAD != 'false' }} 
-    runs-on: [self-hosted, macOS, X64, mobile-1]
+    if: ${{ inputs.IOS_ENABLE_UPLOAD != 'false' }}
+    runs-on:
+      group: crispy-self-hosted-runners
     defaults:
       run:
         working-directory: ios
