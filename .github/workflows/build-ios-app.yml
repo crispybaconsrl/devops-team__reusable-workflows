@@ -3,6 +3,9 @@ name: Build iOS app
 on:
   workflow_call:
     inputs:
+      FLUTTER_VERSION:
+        required: true
+        type: string
       IOS_KEY_ID:
         required: true
         type: string
@@ -31,11 +34,12 @@ on:
         required: true
 
 env:
+  FLUTTER_VERSION: ${{ inputs.FLUTTER_VERSION }}
+  FLAVOR: ${{ inputs.FLAVOR }}
   IOS_KEY_ID: ${{ inputs.IOS_KEY_ID }}
   IOS_ISSUER_ID: ${{ inputs.IOS_ISSUER_ID }}
   IOS_APP_IDENTIFIER: ${{ inputs.IOS_APP_IDENTIFIER }}
   IOS_EXPORT_OPTIONS_PLIST_PATH: ${{ inputs.IOS_EXPORT_OPTIONS_PLIST_PATH }}
-  FLAVOR: ${{ inputs.FLAVOR }}
   IOS_BUILD_PATH: build/ios/ipa/dab.ipa
   
 jobs:
