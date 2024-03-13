@@ -59,8 +59,7 @@ jobs:
   upload:
     name: Upload Artifact to TestFlight
     if: ${{ inputs.IOS_ENABLE_UPLOAD != 'false' }} 
-#    runs-on: ubuntu-latest
-    runs-on: [self-hosted, macOS, ARM64, mr-mac]
+    runs-on: [self-hosted, macOS, X64, mobile-1]
     defaults:
       run:
         working-directory: ios

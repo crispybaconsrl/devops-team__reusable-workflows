@@ -48,8 +48,7 @@ jobs:
   upload:
     name: Upload Artifact to Play Store
     if: ${{ inputs.ANDROID_ENABLE_UPLOAD != 'false' }} 
-#    runs-on: ubuntu-latest
-    runs-on: [self-hosted, macOS, ARM64, mr-mac]
+    runs-on: [self-hosted, macOS, X64, mobile-1]
     defaults:
       run:
         working-directory: android
