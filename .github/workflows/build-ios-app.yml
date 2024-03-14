@@ -52,8 +52,6 @@ jobs:
         working-directory: ios
     steps:
       - uses: actions/checkout@v4
-      - name: Test user
-        run: whoami
       - name: Setup Flutter version
         run: |
           fvm install ${{ inputs.FLUTTER_VERSION }}
@@ -68,20 +66,21 @@ jobs:
           # create variables
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
           PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
-          KEYCHAIN_PATH=~/Library/Keychains/app-signing.keychain-db
+          KEYCHAIN_PATH=~/Library/Keychains/login.keychain-db
 
           # import certificate and provisioning profile from secrets
           echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
           echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
 
           # create temporary keychain
-          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          # security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          # security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          # security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
 
           # import certificate to keychain
           security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          # security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-key-partition-list -S apple-tool:,apple: -k "" $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
 
           # apply provisioning profile
@@ -104,8 +103,8 @@ jobs:
           name: Release ${{ env.FLAVOR }}
           path: ${{ env.IOS_BUILD_PATH }}
           retention-days: 1
-      - name: Clean up keychain and provisioning profile
-        if: ${{ always() }}
-        run: |
-          security delete-keychain ~/Library/Keychains/app-signing.keychain-db
-          rm ~/Library/MobileDevice/Provisioning\ Profiles/build_pp.mobileprovision
+#      - name: Clean up keychain and provisioning profile
+#        if: ${{ always() }}
+#        run: |
+#          security delete-keychain ~/Library/Keychains/app-signing.keychain-db
+#          rm ~/Library/MobileDevice/Provisioning\ Profiles/build_pp.mobileprovision
