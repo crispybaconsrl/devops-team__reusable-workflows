@@ -109,7 +109,7 @@ jobs:
         if: ${{ always() }}
         run: |
           # Switch back to login keychain
-          security list-keychains -s "~/Library/Keychains/login.keychain"
-          security default-keychain -s "~/Library/Keychains/login.keychain"
+          security list-keychains -s "~/Library/Keychains/login.keychain-db"
+          security default-keychain -s "~/Library/Keychains/login.keychain-db"
           # security delete-keychain ~/Library/Keychains/app-signing.keychain-db
           rm ~/Library/MobileDevice/Provisioning\ Profiles/build_pp.mobileprovision
