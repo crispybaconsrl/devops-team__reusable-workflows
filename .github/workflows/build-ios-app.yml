@@ -52,6 +52,8 @@ jobs:
         working-directory: ios
     steps:
       - uses: actions/checkout@v4
+      - name: Test user
+        run: whoami
       - name: Setup Flutter version
         run: |
           fvm install ${{ inputs.FLUTTER_VERSION }}
