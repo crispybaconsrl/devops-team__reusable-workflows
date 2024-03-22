@@ -3,7 +3,7 @@ name: Build image
 on:
   workflow_call:
     secrets:
-      vault_token:
+      bitwarden_access_token:
         required: true
     inputs:
       PROJECT_NAME:
@@ -36,7 +36,7 @@ jobs:
     - name: Get Secrets
       uses: bitwarden/sm-action@v2.0.0
       with:
-        access_token: ${{ secrets.BITWARDEN_ACCESS_TOKEN }}
+        access_token: ${{ secrets.bitwarden_access_token }}
         secrets: |
           7919e36e-77c2-4e0c-a036-b13b00a77325 > AWS_ACCESS_KEY_ID
           cc90fc89-fdfa-43a3-8169-b13b00a79638 > AWS_SECRET_ACCESS_KEY
