@@ -33,16 +33,13 @@ jobs:
   build_docker_image:
     runs-on: ubuntu-latest
     steps:
-    - name: Import Secrets
-      uses: hashicorp/vault-action@v2.4.2
+    - name: Get Secrets
+      uses: bitwarden/sm-action@v1
       with:
-        url: https://vault.crispybacon.it
-        token: ${{ secrets.vault_token }}
+        access_token: ${{ secrets.BW_ACCESS_TOKEN }}
         secrets: |
-          ${{ inputs.VAULT_AWS_NAME }}/creds/github-pipeline-access-role access_key | AWS_ACCESS_KEY_ID ;
-          ${{ inputs.VAULT_AWS_NAME }}/creds/github-pipeline-access-role secret_key | AWS_SECRET_ACCESS_KEY ;
-    - name: Wait for IAM credentials to be ready
-      run: sleep 10
+          7919e36e-77c2-4e0c-a036-b13b00a77325 > AWS_ACCESS_KEY_ID
+          cc90fc89-fdfa-43a3-8169-b13b00a79638 > AWS_SECRET_ACCESS_KEY
     - name: Create ECR registry
       run: aws ecr create-repository --repository-name ${{ inputs.PROJECT_NAME }} --region ${{ inputs.AWS_REGION }} || true
     - uses: actions/checkout@v3
